@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>Teampling - 팀원 입력 (시연용)</title>
+  <style>
+    :root {
+      --primary-color: #4A90E2;
+      --secondary-color: #90D5FF;
+      --bg-color: #f4f7f9;
+      --card-bg: #ffffff;
+      --text-main: #333;
+      --text-sub: #666;
+      --border-radius: 12px;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container { max-width: 800px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { color: var(--primary-color); font-size: 2.5rem; margin-bottom: 10px; }
+    h2 { border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; margin-top: 30px; font-size: 1.4rem; color: #444; }
+    
+    .card {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+
+    input[type="text"], select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover { background-color: #357abd; }
+
+    .character-info-box {
+      background-color: #f0f9ff;
+      border: 1px solid var(--secondary-color);
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin: 15px 0;
+      font-size: 0.9rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    #output {
+      background: #2d3436;
+      color: #dfe6e9;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+
+    .status-msg { color: var(--primary-color); font-weight: bold; margin-top: 10px; }
+    fieldset { border: 1px solid #eee; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+    legend { font-weight: bold; color: var(--text-main); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🚀 Teampling</h1>
+    <p>팀원 입력을 모아 Wanted LaaS에서 분석 결과를 확인하세요!</p>
+  </header>
+
+  <div class="card">
+    <h2>1) 서버 및 팀 코드 설정</h2>
+    <label>서버 BASE URL (ngrok 또는 Cloudflare 주소)</label>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <input id="baseUrl" value="http://127.0.0.1:8000" placeholder="https://your-tunnel-url.trycloudflare.com">
+      <button id="applyBaseBtn" style="white-space:nowrap;">적용</button>
+    </div>
+    <p id="baseText" class="status-msg"></p>
+    
+    <hr style="margin:20px 0; border: 0.5px solid #eee;">
+    
+    <button id="createTeamBtn" style="width:100%; background-color: #6c5ce7;">새 팀 코드 생성하기</button>
+    <div style="margin-top:15px;">
+      <label>현재 팀 코드:</label>
+      <input id="teamCode" placeholder="예: a3f91c">
+    </div>
+    <p id="teamCodeText" class="status-msg"></p>
+  </div>
+
+  <div class="card">
+    <h2>2) 프로젝트 정보 설정</h2>
+    <form id="teamMetaForm">
+      <p><b>전공</b></p>
+      <input name="major" placeholder="예: 컴퓨터공학" required>
+      <p><b>프로젝트 유형</b></p>
+      <select name="project_type" required>
+        <option value="발표 중심형">발표 중심형</option>
+        <option value="보고서 중심형">보고서 중심형</option>
+        <option value="개발/제작형">개발/제작형</option>
+        <option value="조사/분석형">조사/분석형</option>
+        <option value="혼합형">혼합형</option>
+      </select>
+      <button type="submit" style="width:100%; margin-top: 10px;">팀 정보 저장</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>3) 팀원 상세 입력</h2>
+    <form id="memberForm">
+      <p><b>이름</b></p>
+      <input name="name" required placeholder="이름을 입력하세요">
+
+      <p><b>MBTI</b></p>
+      <select name="mbti" required>
+        <option>INTJ</option><option>INTP</option><option>ENTJ</option><option>ENTP</option>
+        <option>INFJ</option><option>INFP</option><option>ENFJ</option><option>ENFP</option>
+        <option>ISTJ</option><option>ISFJ</option><option>ESTJ</option><option>ESFJ</option>
+        <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
+      </select>
+
+      <p><b>나의 캐릭터 선택</b></p>
+      <div class="character-info-box">
+        <h4 style="margin-top:0;">🛡️ 든든한 총대 (The Captain)</h4>
+        <ul style="margin-bottom: 10px;"><li>성향: 전체적인 그림을 보며 안정감을 느낌.</li></ul>
+        <h4>🛠️ 갓생 실무자 (The Specialist)</h4>
+        <ul style="margin-bottom: 10px;"><li>성향: 결과물로 증명하는 묵묵한 스타일.</li></ul>
+        <h4>💡 아이디어 뱅크 (The Ideator)</h4>
+        <ul style="margin-bottom: 10px;"><li>성향: 참신한 시각과 논리적 피드백 제공.</li></ul>
+        <h4>🍯 프로 리액션러 (The Coordinator)</h4>
+        <ul style="margin-bottom: 10px;"><li>성향: 팀원 간의 조화와 중재 능통.</li></ul>
+        <h4>🎤 무대 체질 발표자 (The Presenter)</h4>
+        <ul><li>성향: 복잡한 내용을 쉽게 전달하는 설득력.</li></ul>
+      </div>
+
+      <select name="character" required>
+        <option value="" disabled selected>내 캐릭터 유형을 선택하세요</option>
+        <option value="Captain">🛡️ 든든한 총대(Captain)</option>
+        <option value="Specialist">🛠️ 갓생 실무자(Specialist)</option>
+        <option value="Ideator">💡 아이디어 뱅크(Ideator)</option>
+        <option value="Coordinator">🍯 프로 리액션러(Coordinator)</option>
+        <option value="Presenter">🎤 무대 체질 발표자(Presenter)</option>
+      </select>
+
+      <fieldset>
+        <legend>👍 선호 작업</legend>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="preferred" value="일정/총괄"> 일정/총괄</label>
+          <label><input type="checkbox" name="preferred" value="자료조사"> 자료조사</label>
+          <label><input type="checkbox" name="preferred" value="문서/보고서"> 문서/보고서</label>
+          <label><input type="checkbox" name="preferred" value="PPT"> PPT</label>
+          <label><input type="checkbox" name="preferred" value="회의록"> 회의록</label>
+          <label><input type="checkbox" name="preferred" value="중재"> 중재</label>
+          <label><input type="checkbox" name="preferred" value="발표"> 발표</label>
+          <label><input type="checkbox" name="preferred" value="Q&A"> Q&A</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>👎 비선호 작업</legend>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="avoid" value="일정/총괄"> 일정/총괄</label>
+          <label><input type="checkbox" name="avoid" value="자료조사"> 자료조사</label>
+          <label><input type="checkbox" name="avoid" value="문서/보고서"> 문서/보고서</label>
+          <label><input type="checkbox" name="avoid" value="PPT"> PPT</label>
+        </div>
+      </fieldset>
+
+      <button type="submit" style="width:100%; height:50px; font-size:1.1rem; margin-top:10px;">팀원 추가 완료</button>
+    </form>
+    <p id="countText" class="status-msg" style="text-align:center;"></p>
+  </div>
+
+  <div class="card">
+    <h2>디버그 로그</h2>
+    <pre id="output">서버 응답이 여기에 표시됩니다...</pre>
+  </div>
+</div>
+
+<script>
+  let BASE = document.getElementById("baseUrl").value;
+
+  function getTeamCode() { return document.getElementById("teamCode").value.trim(); }
+  function checkedValues(name) { return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(x => x.value); }
+
+  document.getElementById("applyBaseBtn").onclick = () => {
+    BASE = document.getElementById("baseUrl").value.trim();
+    document.getElementById("baseText").textContent = `✅ 서버 주소 적용됨: ${BASE}`;
+  };
+
+  document.getElementById("createTeamBtn").onclick = async () => {
+    try {
+      const res = await fetch(`${BASE}/create_team`, { method: "POST" });
+      const result = await res.json();
+      if(result.team_code) {
+        document.getElementById("teamCode").value = result.team_code;
+        document.getElementById("teamCodeText").textContent = `✅ 새 팀 코드가 발급되었습니다: ${result.team_code}`;
+      }
+    } catch (e) {
+      document.getElementById("teamCodeText").textContent = `❌ 서버 연결 오류: ${e.message}`;
+    }
+  };
+
+  document.getElementById("teamMetaForm").onsubmit = async (e) => {
+    e.preventDefault();
+    const code = getTeamCode();
+    if (!code) return alert("팀 코드를 먼저 입력하세요.");
+    const data = { major: e.target.major.value, project_type: e.target.project_type.value };
+    const res = await fetch(`${BASE}/set_team/${code}`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+    alert("팀 정보 저장 완료!");
+  };
+
+  document.getElementById("memberForm").onsubmit = async (e) => {
+    e.preventDefault();
+    const code = getTeamCode();
+    if (!code) return alert("팀 코드를 먼저 입력하세요.");
+    const data = {
+      name: e.target.name.value,
+      mbti: e.target.mbti.value,
+      character: e.target.character.value,
+      preferred_tasks: checkedValues("preferred"),
+      avoid_tasks: checkedValues("avoid")
+    };
+    const res = await fetch(`${BASE}/submit/${code}`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById("countText").textContent = `현재 팀원 수: ${result.count ?? "?"}명`;
+    document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+    e.target.reset();
+    alert(`${data.name} 팀원 추가 완료!`);
+  };
+</script>
+</body>
+</html>

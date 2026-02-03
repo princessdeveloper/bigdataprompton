@@ -9,7 +9,7 @@ CORS(app)
 # 팀 데이터를 저장할 공간 (서버 재시작 시 초기화됩니다)
 teams_db = {}
 
-# [추가] 브라우저에서 주소만 입력했을 때 index.html을 보여주는 코드
+# [중요] 브라우저에서 주소만 입력했을 때 index.html을 보여주는 코드
 @app.route('/')
 def index():
     # 현재 폴더에 있는 index.html 파일을 사용자에게 보냅니다.
@@ -40,7 +40,7 @@ def submit_member(team_code):
     teams_db[team_code]["members"].append(request.json)
     return jsonify({"status": "success", "count": len(teams_db[team_code]["members"])})
 
-# [중요] Wanted LaaS가 데이터를 읽어갈 때 사용하는 조회 경로 (GET)
+# [Wanted LaaS 연동용] 데이터 조회 경로 (GET)
 @app.route('/get_team/<team_code>', methods=['GET'])
 def get_team(team_code):
     team_code = team_code.upper()

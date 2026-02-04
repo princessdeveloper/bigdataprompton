@@ -139,6 +139,7 @@
         <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
       </select>
 
+
       <p><b>나의 캐릭터 선택</b></p>
       <div class="character-info-box">
         <h4 style="margin-top:0;">🛡️ 든든한 총대 (The Captain)</h4>
@@ -171,6 +172,16 @@
           <li>한 줄 요약: "마무리는 내가 화려하게 할게!"</li>
         </ul>
       </div>
+
+
+      <select name="character" required>
+        <option value="" disabled selected>내 캐릭터 유형을 선택하세요</option>
+        <option value="Captain">🛡️ 든든한 총대(Captain)</option>
+        <option value="Specialist">🛠️ 갓생 실무자(Specialist)</option>
+        <option value="Ideator">💡 아이디어 뱅크(Ideator)</option>
+        <option value="Coordinator">🍯 프로 리액션러(Coordinator)</option>
+        <option value="Presenter">🎤 무대 체질 발표자(Presenter)</option>
+      </select>
 
       <fieldset>
         <legend>👍 선호 작업</legend>
@@ -228,6 +239,7 @@
 <script>
   // ✅ BASE URL 자동 설정 (사용자 입력 불필요)
   const BASE = window.location.origin;
+  document.getElementById("baseText").textContent = `✅ 서버 주소 자동 적용됨: ${BASE}`;
 
   function getTeamCode() {
     return document.getElementById("teamCode").value.trim().toUpperCase();
